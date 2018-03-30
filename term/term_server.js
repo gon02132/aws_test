@@ -1,9 +1,9 @@
-var express = require('express');
-var fs = require('fs');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
 
+var express = require('express'); //일종의 프레임웤 ->파싱,세션관리..한꺼번에 저공
+var fs = require('fs'); //파일 읽고쓰기
+var app = express();
+var http = require('http').Server(app); //웹서버 객체 생성
+var io = require('socket.io').listen(http);
 var Global_values = {
     ing: 0,
     random_ing: 0,
@@ -64,6 +64,13 @@ app.get("/head",function(req, res){
     res.end(data);
   });
 });
+//my_head
+app.get("/my_head",function(req, res){
+  fs.readFile('my_head.png', function (error,data) {
+    res.writeHead(200,{'Content-Type':'text/html'});
+    res.end(data);
+  });
+});
 //long_item
 app.get("/long_item",function(req, res){
   fs.readFile('long_item.png', function (error,data) {
@@ -104,13 +111,16 @@ io.on('connection', function(socket){
     console.log("mapsize:",map_size);
   });
   socket.on('crt table', function (cr_tab, input) {
-    console.log("cyka:",cr_tab);
     io.emit('created table',cr_tab, input);
+    //나포함 모든 소켓에게 전송
   });
   socket.on('move loc', function (head_location, imge) {
-    io.emit('moved loc', head_location, imge);
+    socket.broadcast.emit('moved loc', head_location, imge);
+    //나를 제외한 모든 소켓에게 전송
   });
-
+  socket.on('tail move', function (tail_point) {
+    socket.broadcast.emit('tail moved', tail_point);
+  });
 });
 
 http.listen('3000', function(){
