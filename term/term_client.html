@@ -200,10 +200,10 @@ function eat_item(head_point) {
         tail_point = document.getElementsByName((Global_values.name_count + Global_values.tail_count) + "");
         tail_point[0].innerHTML = "<img src='/blank'>";
 
-        //머리정보를 서버에 전송
+        //꼬리정보를 서버에 전송
         socket.emit('move loc',(tail_point[0].id)+"","<img src='/blank'>");
 
-        //다른 클라이언트들의 머리정보를 서버로부터 가져옴
+        //다른 클라이언트들의 꼬리정보를 서버로부터 가져옴
         socket.on('moved loc', function(head_loc, imge){
             var head_temp = document.getElementById(head_loc);
             head_temp.innerHTML = imge;
@@ -245,7 +245,7 @@ function eat_item(head_point) {
            Global_values.temp               = null;
            Global_values.tail_count         = -1;
            Global_values.SleepTIme          = 120;
-           
+
            //삭제버튼 -> 시작버튼으로 변경
            var Cre_BT = document.getElementById("DBT");
            Cre_BT.setAttribute('value', '꼬리이어서 ');
@@ -514,12 +514,6 @@ function Start(event) {
             //꼬리정보를 서버에 전송
             socket.emit('move loc',Global_values.head_location,"<img src='/tail'>");
 
-            //다른 클라이언트들의 머리정보를 서버로부터 가져옴
-            socket.on('moved loc', function(head_loc, imge){
-                var head_temp = document.getElementById(head_loc+"");
-                head_temp.innerHTML = imge;
-            });
-
             switch (event.keyCode) {
                 //←
                 case 37:
@@ -569,12 +563,6 @@ function Start(event) {
             //머리정보를 서버에 전송
             socket.emit('move loc',Global_values.head_location,"<img src='/my_head'>");
 
-            //다른 클라이언트들의 머리정보를 서버로부터 가져옴
-            socket.on('moved loc', function(head_loc, imge){
-                var head_temp = document.getElementById(head_loc+"");
-                head_temp.innerHTML = imge;
-            });
-
         }catch(exception){
           //죽은 유저의 모든 몸통삭제
           game_over_remove_tail(document.getElementById(Global_values.head_location + ""));
@@ -592,6 +580,18 @@ function Start(event) {
     }
 }
 
+//다른 클라이언트들의 머리정보를 서버로부터 가져옴
+socket.on('moved loc', function(head_loc, imge){
+    var head_temp = document.getElementById(head_loc+"");
+    head_temp.innerHTML = imge;
+});
+
+
+//다른 클라이언트들의 머리정보를 서버로부터 가져옴
+socket.on('moved loc', function(head_loc, imge){
+    var head_temp = document.getElementById(head_loc+"");
+    head_temp.innerHTML = imge;
+});
 
 //--------------객체를 서버로 넘기기위한 JSON 사용 ----------------------
       function toJSON(node) {

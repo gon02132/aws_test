@@ -33,7 +33,7 @@ var Global_values = {
 //name_count의      경우 속성name으로 꼬리 조작 -> 버그방지를위해 3부터 시작
 
 app.get("/",function(req, res){
-  res.sendfile("term_client.html");
+  res.sendFile(__dirname +"\\"+"term_client.html");
 });
 
 //서버단에서 사진 가져오기 blank
