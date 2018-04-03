@@ -177,12 +177,6 @@ function game_over_remove_tail(head_point){
     tail_point[0].innerHTML = "<img src='/blank'>";
     //머리정보를 서버에 전송
     socket.emit('move loc',(tail_point[0].id)+"","<img src='/blank'>");
-
-    //다른 클라이언트들의 머리정보를 서버로부터 가져옴
-    socket.on('moved loc', function(head_loc, imge){
-        var head_temp = document.getElementById(head_loc);
-        head_temp.innerHTML = imge;
-    });
     Global_values.name_count++;
   }
 }
@@ -202,12 +196,6 @@ function eat_item(head_point) {
 
         //꼬리정보를 서버에 전송
         socket.emit('move loc',(tail_point[0].id)+"","<img src='/blank'>");
-
-        //다른 클라이언트들의 꼬리정보를 서버로부터 가져옴
-        socket.on('moved loc', function(head_loc, imge){
-            var head_temp = document.getElementById(head_loc);
-            head_temp.innerHTML = imge;
-        });
 
     }
 
@@ -272,12 +260,6 @@ function eat_item(head_point) {
 
                //머리정보를 서버에 전송
                socket.emit('move loc',Global_values.head_location,"<img src='/my_head'>");
-
-               //다른 클라이언트들의 머리정보를 서버로부터 가져옴
-               socket.on('moved loc', function(head_loc, imge){
-                   var head_temp = document.getElementById(head_loc+"");
-                   head_temp.innerHTML = imge;
-               });
 
                //시작화면을 중앙으로 전환 - 현재 window의 가로 세로길이를 구하여 중앙으로
                var offset = $(Create_First).offset();
@@ -401,13 +383,6 @@ function eat_item(head_point) {
 
       //머리정보를 서버에 전송
       socket.emit('move loc',Global_values.head_location,"<img src='/my_head'>");
-
-      //다른 클라이언트들의 머리정보를 서버로부터 가져옴
-      socket.on('moved loc', function(head_loc, imge){
-          var head_temp = document.getElementById(head_loc+"");
-          head_temp.innerHTML = imge;
-
-      });
 
       //시작화면을 중앙으로 전환 - 현재 window의 가로 세로길이를 구하여 중앙으로
       var offset = $(Create_First).offset();
@@ -580,14 +555,7 @@ function Start(event) {
     }
 }
 
-//다른 클라이언트들의 머리정보를 서버로부터 가져옴
-socket.on('moved loc', function(head_loc, imge){
-    var head_temp = document.getElementById(head_loc+"");
-    head_temp.innerHTML = imge;
-});
-
-
-//다른 클라이언트들의 머리정보를 서버로부터 가져옴
+//다른 클라이언트들의 위치 정보를 서버로부터 가져옴
 socket.on('moved loc', function(head_loc, imge){
     var head_temp = document.getElementById(head_loc+"");
     head_temp.innerHTML = imge;
