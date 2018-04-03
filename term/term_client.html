@@ -335,63 +335,6 @@ function eat_item(head_point) {
   var origin_table = document.getElementById("tab");
   socket.emit('crt table',toJSON(origin_table), Global_values.map_size);
 
-  //서버로부터 테이블을 받는 과정
-  socket.on('created table', function (cr_tab, input_e) {
-    clearInterval(Global_values.ing);
-    clearInterval(Global_values.random_ing);
-    Global_values.isIntervalPlaying = 0;
-    Global_values.random_check = 0;
-    Global_values.move = 0;
-    Global_values.ing = null;
-    Global_values.tail_count = -1;
-
-  cr_tab = toDOM(cr_tab);
-  var Get_Table = document.getElementById("tab_par");
-  var child_Table = document.getElementById("tab");
-
-  //맵크기를 다른 클라이언트랑 동기화
-  Global_values.map_size = input_e;
-
-  if(child_Table != null){
-    Get_Table.removeChild(child_Table);
-    Get_Table.appendChild(cr_tab);
-  }
-
-  //시작점 랜덤위치로 지정
-  while(true){
-  var ran_1 =  parseInt(Math.floor(Math.random()* Global_values.map_size))+"";
-  var ran_2 =  parseInt(Math.floor(Math.random()* Global_values.map_size))+"";
-  if(Global_values.map_size<=10)
-      Global_values.head_location = ran_1+".00"+ran_2;
-  else if(Global_values.map_size<=100){
-    if(ran_2 < 10)
-      Global_values.head_location = ran_1+".00"+ran_2;
-    else
-      Global_values.head_location = ran_1+".0"+ran_2;
-    }
-  else
-      Global_values.head_location = ran_1+"."+ran_2;
-
-      var Create_First = document.getElementById(Global_values.head_location+"");
-      if(Create_First.innerHTML == '<img src="/blank">')
-        break;
-    }
-    //머리부분 출력
-      Create_First.innerHTML = "<img src='/head'>";
-      Create_First.setAttribute('name', (++Global_values.name_count)+"");
-
-
-      //머리정보를 서버에 전송
-      socket.emit('move loc',Global_values.head_location,"<img src='/my_head'>");
-
-      //시작화면을 중앙으로 전환 - 현재 window의 가로 세로길이를 구하여 중앙으로
-      var offset = $(Create_First).offset();
-      offset.left -= (window.innerWidth/2);
-      offset.top -= (window.innerHeight/2-90);
-      $('html, body').animate({scrollLeft : offset.left, scrollTop : offset.top},0);
-
-});
-
 //맨밑 바 정보 출력
 bar_info();
 }
@@ -560,6 +503,64 @@ socket.on('moved loc', function(head_loc, imge){
     var head_temp = document.getElementById(head_loc+"");
     head_temp.innerHTML = imge;
 });
+
+//서버로부터 테이블을 받는 과정
+socket.on('created table', function (cr_tab, input_e) {
+  clearInterval(Global_values.ing);
+  clearInterval(Global_values.random_ing);
+  Global_values.isIntervalPlaying = 0;
+  Global_values.random_check = 0;
+  Global_values.move = 0;
+  Global_values.ing = null;
+  Global_values.tail_count = -1;
+
+cr_tab = toDOM(cr_tab);
+var Get_Table = document.getElementById("tab_par");
+var child_Table = document.getElementById("tab");
+
+//맵크기를 다른 클라이언트랑 동기화
+Global_values.map_size = input_e;
+
+if(child_Table != null){
+  Get_Table.removeChild(child_Table);
+  Get_Table.appendChild(cr_tab);
+}
+
+//시작점 랜덤위치로 지정
+while(true){
+var ran_1 =  parseInt(Math.floor(Math.random()* Global_values.map_size))+"";
+var ran_2 =  parseInt(Math.floor(Math.random()* Global_values.map_size))+"";
+if(Global_values.map_size<=10)
+    Global_values.head_location = ran_1+".00"+ran_2;
+else if(Global_values.map_size<=100){
+  if(ran_2 < 10)
+    Global_values.head_location = ran_1+".00"+ran_2;
+  else
+    Global_values.head_location = ran_1+".0"+ran_2;
+  }
+else
+    Global_values.head_location = ran_1+"."+ran_2;
+
+    var Create_First = document.getElementById(Global_values.head_location+"");
+    if(Create_First.innerHTML == '<img src="/blank">')
+      break;
+  }
+  //머리부분 출력
+    Create_First.innerHTML = "<img src='/head'>";
+    Create_First.setAttribute('name', (++Global_values.name_count)+"");
+
+
+    //머리정보를 서버에 전송
+    socket.emit('move loc',Global_values.head_location,"<img src='/my_head'>");
+
+    //시작화면을 중앙으로 전환 - 현재 window의 가로 세로길이를 구하여 중앙으로
+    var offset = $(Create_First).offset();
+    offset.left -= (window.innerWidth/2);
+    offset.top -= (window.innerHeight/2-90);
+    $('html, body').animate({scrollLeft : offset.left, scrollTop : offset.top},0);
+
+});
+
 
 //--------------객체를 서버로 넘기기위한 JSON 사용 ----------------------
       function toJSON(node) {
